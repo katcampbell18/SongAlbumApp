@@ -26,7 +26,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar">
-    <a class="navbar-brand" href="#">Security</a>
+    <a class="navbar-brand" href="#">Album Repo</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarNav" aria-controls="navbarNav"
             aria-expanded="false" aria-label="Toggle navigation">
@@ -38,14 +38,26 @@
                 <a class="nav-link" href="/">Home <span class="sr-only">
                         (current)</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" sec:authorize="hasAuthority('ADMIN')">
                 <a class="nav-link" href="/secure">Secure</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/add_song">Add a Song</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/add_album">Add an Album</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/list">List of Songs</a>
             </li>
             <li class="nav-item" sec:authorize="!isAuthenticated()">
                 <a class="nav-link" href="/login">Login</a>
             </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
+            <li class="nav-item">
                 <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/register">New User</a>
             </li>
         </ul>
     </div>
@@ -56,9 +68,7 @@
 
 <nav class="navbar navbar-dark bg-dark fixed-bottom" th:fragment="footer">
     <div class="container">
-            <a class="nav-item nav-link" href="/">Home </a>
-            <a class="nav-item nav-link" href="/secure">Secure </a>
-            <a class="nav-item nav-link" href="#">Copyright 2019 - Josemy Joseph</a>
+            <a class="nav-item nav-link" href="#">Copyright 2019 - KCampbell</a>
     </div>
 </nav>
 

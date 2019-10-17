@@ -1,66 +1,77 @@
 package com.example.demo.controllers;
 
+import com.example.demo.beans.Album;
+import com.example.demo.beans.Song;
 import com.example.demo.beans.User;
+import com.example.demo.repositories.AlbumRepository;
+import com.example.demo.repositories.SongRepository;
 import com.example.demo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.security.Principal;
 
 @Controller
 public class HomeController {
 
-  private UserService userService;
+  @Autowired
+  AlbumRepository albumRepository;
+  @Autowired
+  SongRepository songRepository;
 
-  @RequestMapping("/")
-  public String index(){
-    return "index";
+  @RequestMapping(value = "/list")
+  public String songList(Model model){
+    model.addAttribute("songs", songRepository.findAll());
+    model.addAttribute("albums", albumRepository.findAll());
+    return "list";
   }
 
-  @RequestMapping("/login")
-  public String login(){
-    return "login";
+  @RequestMapping(value = "/add_album", method = RequestMethod.GET)
+  public String albumForm(Model model){
+    model.addAttribute("album", new Album());
+    return "albumform";
   }
 
-  @RequestMapping(value = "/register", method = RequestMethod.GET)
-  public String showRegistrationPage(Model model) {
-    model.addAttribute("user", new User());
-    return "registration";
+  @RequestMapping(value = "/process_album", method = RequestMethod.POST)
+  public String  processAlbum(@ModelAttribute Album album){
+    albumRepository.save(album);
+    return "redirect:/";
   }
 
-  @RequestMapping(value="/register", method=RequestMethod.POST)
-  public String processRegistrationPage(@Valid @ModelAttribute("user")
-                                                User user, BindingResult
-                                                result,
-                                        Model model) {
-    model.addAttribute("user", new User());
-    if (result.hasErrors()) {
-      return "registration";
-    }
-    else {
-      userService.saveUser(user);
-      model.addAttribute("message", "User Account Successfully Created");
-    }
-    return "index";
+  @RequestMapping(value = "/add_song", method = RequestMethod.GET)
+  public String songForm(Model model){
+    model.addAttribute("albums", albumRepository.findAll());
+    model.addAttribute("song", new Song());
+    return "songform";
   }
 
-  @RequestMapping("/secure")
-  public String secure(HttpServletRequest request, Authentication
-          authentication, Principal principal){
-    Boolean isAdmin =  request.isUserInRole("ADMIN");
-    Boolean isUser =  request.isUserInRole("USER");
-    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    String username = principal.getName();
-    return "secure";
+  @RequestMapping(value = "/process_song", method = RequestMethod.POST)
+  public String processSong(@ModelAttribute Song song){
+    songRepository.save(song);
+    return "redirect:/list";
   }
 
+  @RequestMapping("/detail_song/{id}")
+  public String showSong(@PathVariable("id") long id, Model model){
+    model.addAttribute("song", songRepository.findById(id).get());
+    return "show";
+  }
 
+  @RequestMapping("/update_song/{id}")
+  public String updateSong(@PathVariable("id") long id, Model model){
+    model.addAttribute("song", songRepository.findById(id).get());
+    model.addAttribute("albums", albumRepository.findAll());
+    return "songform";
+  }
+
+  @RequestMapping("delete_song/{id}")
+  public String delSong(@PathVariable("id") long id){
+    songRepository.deleteById(id);
+    return "redirect:/list";
+  }
 }

@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="www.thymeleaf.org">
+<html lang="en" xmlns:th="www.thymeleaf.org" xmlns:pth="http://www.w3.org/1999/html">
 <head th:replace="base :: headstuff"></head>
 <body>
 <nav th:replace="base :: navbar"></nav>
 <div class="container">
-    <h3>Secure Page</h3>
-    <a href="/logout">logout</a>
+    <h3>User Details</h3>
+    <div class="row" th:each="user : ${user_id}">
+        <div class="col-lg-6">
+            <p th:inline="text">First Name:  [["${user.firstName}]]</p>
+            <p th:inline="text">Last Name:  [[${user.lastName}]]</p>
+            <p th:inline="text">Email:  [[${user.email}]]</p>
+            <p th:inline="text">Username:  [[${user.username}]]</p>
+        </div>
+    </div>
 </div>
 <nav th:replace="base :: footer"></nav>
 <th:block th:replace="base :: jslinks"></th:block>
