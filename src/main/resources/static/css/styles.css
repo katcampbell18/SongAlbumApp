@@ -2,3 +2,16 @@
     margin: 0;
     padding: 0;
 }
+body {
+    background: url("https://res.cloudinary.com/katgurl21/image/upload/v1571341476/Music/music-2_d6t5oa.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    font-weight: 800;
+}
+.jumbotron{
+    background: none;
+    text-align: center;
+    color: white;
+}
